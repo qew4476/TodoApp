@@ -61,19 +61,15 @@ def delete_task(task_id:int):
     return task_db
 
 def update_task(task_id:int, new_task:pydantic_model.Task):
-    db_task = get_one_task(task_id) #pydantic
+    db_task = db_session.query(sql_model.Task).filter(sql_model.Task.task_id==task_id).first()
     if not db_task:
         return None
-    #edit the task
-    db_task.task_id = new_task.task_id
-    db_task.task_name = new_task.task_name
-    db_task.deadline = new_task.deadline
-    db_task.user_id = new_task.user_id
+    for key, value in new_task.model_dump().items():
+        setattr(db_task, key, value)
     db_session.commit()
-    db_session.refresh(db_task)
-    return db_task
+    return pydantic_model.Task.model_validate(db_task)
 
-# print(update_task(1,pydantic_model.Task(task_id=1,task_name='test',deadline=datetime.datetime.now(),user_id='abc')))
+
 
 # # test
 # user = {'user_id':'abc','password':'123','user_name':'Me'}
