@@ -40,18 +40,25 @@ def create_task(task:pydantic_model.TaskCreate):
             'msg':str(e)
         }
 
-def get_one_task(task_id:int):
-    return db_session.query(sql_model.Task).filter(sql_model.Task.task_id==task_id).first()
+def get_one_task(task:pydantic_model.Task):
+    task_db = db_session.query(sql_model.Task).filter(sql_model.Task.task_id==task.task_id).first()
+    if not task_db:
+        return None
+    return pydantic_model.Task.model_validate(task_db)
 
-def get_all_tasks(user_id:str):
-    return db_session.query(sql_model.Task).filter(sql_model.Task.user_id==user_id).all()
+def get_a_user_all_tasks(user:pydantic_model.User):
+    tasks_db = db_session.query(sql_model.Task).filter(sql_model.Task.user_id==user.user_id).all()
+    if not tasks_db:
+        return None
+    return [pydantic_model.Task.model_validate(task) for task in tasks_db]
+
+create_task(pydantic_model.TaskCreate(task_name='44',deadline='2021-10-10T10:00:00',user_id='abc'))
 
 
-
-## test
+# # test
 # user = {'user_id':'abc','password':'123','user_name':'Me'}
 # print(create_user(pydantic_model.UserCreate(**user)))
-
-# task={"task_name":"test","deadline":"2021-10-10T10:00:00","rest_day":[1,4],"workload":1,"workload_unit":"h","user_id":"abc"}
+#
+# task={"task_name":"test","deadline":"2021-10-10T10:00:00","user_id":"abc"}
 # print(create_task(pydantic_model.TaskCreate(**task)))
 
