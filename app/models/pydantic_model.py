@@ -21,9 +21,6 @@ class Task(TaskBase):
     class Config:
         from_attributes = True
 
-class many_tasks(BaseModel):
-    tasks:List[Task]
-
 class UserBase(BaseModel):
     user_name: str
 
@@ -35,7 +32,7 @@ class User(UserBase):
     user_id:str
     tasks:List[Task] = []
 
-    class Config:   #transfer orm(table) to pydantic if they have the same column
+    class Config:   #It can validate the data from Table(database) in the format of pydantic.
         from_attributes=True
 
 # task={"task_name":"test","deadline":"2021-10-10T10:00:00","rest_day":[1,4],"workload":1,"workload_unit":"h"}
