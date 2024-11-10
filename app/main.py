@@ -1,5 +1,4 @@
 from fastapi import FastAPI, HTTPException
-
 from app.routes import routes, routes_auth
 
 app = FastAPI()

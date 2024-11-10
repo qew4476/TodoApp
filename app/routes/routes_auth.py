@@ -3,6 +3,7 @@ from app.models.pydantic_model import UserCreate, UserLogin
 from app.auth.jwt_handler import signJWT
 from fastapi import APIRouter, HTTPException
 
+
 auth_router = APIRouter()
 
 #user registration
