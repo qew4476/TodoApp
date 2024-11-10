@@ -1,15 +1,25 @@
 # To check whether the request is authorized or not
 
-from fastapi import HTTPException, Security
+from fastapi import Request,HTTPException, Security
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from app.auth.jwt_handler import decodeJWT
 
 class JWTBearer(HTTPBearer):
     def __init__(self, auto_error: bool = True):
         super(JWTBearer, self).__init__(auto_error=auto_error)
 
-    async def __call__(self, credentials: HTTPAuthorizationCredentials = Security(HTTPAuthorizationCredentials)):
-        if credentials.scheme.lower() != "bearer":
-            raise HTTPException(status_code=403, detail="Invalid authentication scheme")
-        if not credentials.credentials:
-            raise HTTPException(status_code=403, detail="Invalid token credentials")
-        return credentials.credentials
+    async def __call__(self, request : Request):
+        credentials: HTTPAuthorizationCredentials = await super(JWTBearer, self).__call__(request)
+        if credentials:
+            if not credentials.scheme == "Bearer":
+                raise HTTPException(status_code=403, detail="Invalid or expired Token")
+            return credentials.credentials
+        else:
+            raise HTTPException(status_code=403, detail="Invalid authorization code")
+
+
+    def verify_token(self, jwt_token: str):
+        # This function is used to verify the token
+        isTokenValid = False
+        payload = decodeJWT(jwt_token)
+        return True
