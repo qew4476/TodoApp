@@ -50,8 +50,6 @@ def get_one_task(task_id:int):
 
 def get_a_user_all_tasks(user_id:str):
     tasks_db = db_session.query(sql_model.Task).filter(sql_model.Task.user_id==user_id).all()
-    if not tasks_db:
-        return None
     return [pydantic_model.Task.model_validate(task) for task in tasks_db]
 
 def delete_task(task_id:int):
