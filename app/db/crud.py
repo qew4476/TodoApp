@@ -1,4 +1,4 @@
-from typing import List
+from sqlalchemy.exc import IntegrityError
 
 import app.models.sql_model as sql_model
 import app.models.pydantic_model as pydantic_model
@@ -17,16 +17,29 @@ def create_user(user:pydantic_model.UserCreate):    #It means the input data mus
     try:
         #Format the input data (user) to meet the requirements for entering user data into the database.
         db_user_data = sql_model.User(user_id=user.user_id,password=user.password,user_name=user.user_name)
-
         db_session.add(db_user_data)
         db_session.commit()
         db_session.refresh(db_user_data)
-        return db_user_data
+        return {
+            'status': 'succeed to create user{}'.format(user.user_id),
+            'data': db_user_data
+        }
+    except IntegrityError:
+        db_session.rollback()
+        return {
+            'status': 'error',
+            'msg': f'User ID "{user.user_id}" already exists'
+        }
     except Exception as e:
+        db_session.rollback()
         return {
             'status': 'error',
             'msg': str(e)
         }
+
+def get_all_users():
+    users_db = db_session.query(sql_model.User).all()
+    return [pydantic_model.User.model_validate(user) for user in users_db]
 
 def create_task(task:pydantic_model.TaskCreate):
     try:

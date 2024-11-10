@@ -1,0 +1,7 @@
+sqlalchemy~=2.0.35
+typing_extensions~=4.11.0
+pydantic~=2.9.2
+fastapi~=0.112.2
+
+PyJWT~=1.7.1
+python-decouple==3.3

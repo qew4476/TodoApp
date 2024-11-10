@@ -24,7 +24,8 @@ def get_a_user_all_tasks(user_id:str):
 def delete_task(task_id:int):
     return db.delete_task(task_id)
 
-@todo_route.post('/user',response_model=pydantic_model.User)
-def create_user(doc:pydantic_model.UserCreate):
-    return db.create_user(doc)
+#update a task
+@todo_route.put('/task/{task_id}',response_model=pydantic_model.Task)
+def update_task(task_id:int,doc:pydantic_model.Task):
+    return db.update_task(task_id,doc)
 
