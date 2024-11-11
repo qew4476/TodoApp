@@ -7,7 +7,7 @@ from app.auth.jwt_bearer import JWTBearer
 
 task_router = APIRouter()
 
-@task_router.post('/task', response_model=pydantic_model.Task, dependencies=[Depends(JWTBearer()])
+@task_router.post('/task', response_model=pydantic_model.Task, dependencies=[Depends(JWTBearer())])
 def create_task(doc:pydantic_model.TaskCreate):
     return db.create_task(doc)
 
