@@ -11,6 +11,7 @@
             margin: 0;
             padding: 20px;
         }
+
         .header {
             background-color: #007bff;
             color: white;
@@ -21,9 +22,11 @@
             justify-content: space-between;
             align-items: center;
         }
+
         .header h1 {
             margin: 0;
         }
+
         .logout-button {
             background-color: #dc3545;
             color: white;
@@ -32,9 +35,11 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
         .logout-button:hover {
             background-color: #c82333;
         }
+
         .todo-list {
             background-color: white;
             padding: 20px;
@@ -42,33 +47,52 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
         }
+
         .todo-list h2 {
             color: #007bff;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>{{ user_id }}'s Todo</h1>
-        <!-- Logout Button -->
-        <button class="logout-button" onclick="logout()">Logout</button>
-    </div>
+<div class="header">
+    <h1>{{ user_id }}'s Todo</h1>
+    <!-- Logout Button -->
+    <button class="logout-button" onclick="logout()">Logout</button>
+</div>
 
-    <div class="todo-list">
-        <h2>Todos</h2>
-        <!-- List tasks  -->
-        <ul>
-            <li>Task 1: Do something important</li>
-            <li>Task 2: Another task</li>
-        </ul>
-    </div>
+<div class="todo-list">
+    <h2>Todos</h2>
+    <!-- List tasks  -->
+    <ul>
+        <li>Task 1: Do something important</li>
+        <li>Task 2: Another task</li>
+    </ul>
+</div>
 
-    <script>
-        // Logout function: Removes the token and redirects to the login page
-        function logout() {
-            localStorage.removeItem("token");  // Remove the token from localStorage
-            window.location.href = "/login";  // Redirect to the login page
-        }
-    </script>
+<script>
+    // 從 localStorage 獲取 token 和 user_id
+    const token = localStorage.getItem("access_token");
+    const localUserId = localStorage.getItem("user_id");
+
+    // 獲取 URL 中的 user_id
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlUserId = window.location.pathname.split("/")[2];
+
+    console.log("Token:", token);
+    console.log("Local User ID:", localUserId);
+    console.log("URL User ID:", urlUserId);
+
+    // 檢查 localStorage 的 user_id 是否與 URL 中的 user_id 一致
+    if (!token || !localUserId || localUserId !== urlUserId) {
+        // 如果沒有 token 或者 user_id 不一致，跳轉到登錄頁面
+        window.location.href = "/login";
+    }
+
+    // Logout function: Removes the token and redirects to the login page
+    function logout() {
+        localStorage.removeItem("token");  // Remove the token from localStorage
+        window.location.href = "/login";  // Redirect to the login page
+    }
+</script>
 </body>
 </html>
