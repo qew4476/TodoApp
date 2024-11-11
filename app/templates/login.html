@@ -116,33 +116,6 @@
     </div>
 
     <script>
-        // Check if there's a token in localStorage or sessionStorage, and if so, redirect to the home page
-        window.onload = function() {
-            const token = localStorage.getItem("token"); // Or use sessionStorage
-            if (token) {
-                // Check if token is valid by sending a request to the backend
-                fetch("/user/me", {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${token}`
-                    }
-                })
-                .then(response => {
-                    if (response.ok) {
-                        // If token is valid, redirect to the home page for the logged-in user
-                        window.location.href = "/user/me"; // Adjust this URL as needed
-                    } else {
-                        // If token is invalid, redirect to login
-                        window.location.href = "/auth/login";
-                    }
-                })
-                .catch(error => {
-                    console.error("Error verifying token:", error);
-                    window.location.href = "/auth/login"; // If error occurs, redirect to login
-                });
-            }
-        };
-
         document.getElementById("login-form").addEventListener("submit", function(event) {
             event.preventDefault();
 
@@ -160,7 +133,6 @@
             .then(data => {
                 if (data['access token']) {
                     // Save token to localStorage for future requests
-                    localStorage.setItem("token", data['access token']);
                     console.log("Login successful: ", data);
 
                     // Redirect to the user's home page
