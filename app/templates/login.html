@@ -14,6 +14,7 @@
             margin: 0;
             background-color: #f4f4f9;
         }
+
         .login-container {
             width: 300px;
             padding: 20px;
@@ -22,24 +23,29 @@
             border-radius: 8px;
             text-align: center;
         }
+
         .login-container h1 {
             font-size: 36px;
             color: #007bff;
             margin: 0;
         }
+
         .login-container h2 {
             font-size: 18px;
             color: #666;
             margin-bottom: 20px;
         }
+
         .form-group {
             margin-bottom: 15px;
             text-align: left;
         }
+
         .form-group label {
             display: block;
             font-weight: bold;
         }
+
         .form-group input {
             width: 100%;
             padding: 8px;
@@ -47,6 +53,7 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+
         .form-group button {
             width: 100%;
             padding: 10px;
@@ -56,13 +63,16 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
         .form-group button:hover {
             background-color: #0056b3;
         }
+
         .error-message {
             color: red;
             text-align: center;
         }
+
         .register-button {
             margin-top: 10px;
             width: 100%;
@@ -73,9 +83,11 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
         .register-button:hover {
             background-color: #218838;
         }
+
         .test-credentials {
             margin-top: 20px;
             padding: 10px;
@@ -89,52 +101,53 @@
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <h1>TodoApp</h1>
-        <h2>Login</h2>
-        <div id="error-message" class="error-message"></div>
-        <form id="login-form">
-            <div class="form-group">
-                <label for="user_id">User ID</label>
-                <input type="text" id="user_id" name="user_id" value="abc" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" value="123" required>
-            </div>
-            <div class="form-group">
-                <button type="submit">Login</button>
-            </div>
-        </form>
-        <button class="register-button" onclick="window.location.href='/auth/register'">Register</button>
-
-        <div class="test-credentials">
-            <strong>Test Credentials:</strong><br>
-            <strong>User ID:</strong> abc<br>
-            <strong>Password:</strong> 123
+<div class="login-container">
+    <h1>TodoApp</h1>
+    <h2>Login</h2>
+    <div id="error-message" class="error-message"></div>
+    <form id="login-form">
+        <div class="form-group">
+            <label for="user_id">User ID</label>
+            <input type="text" id="user_id" name="user_id" value="abc" required>
         </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" value="123" required>
+        </div>
+        <div class="form-group">
+            <button type="submit">Login</button>
+        </div>
+    </form>
+    <button class="register-button" onclick="window.location.href='/auth/register'">Register</button>
+
+    <div class="test-credentials">
+        <strong>Test Credentials:</strong><br>
+        <strong>User ID:</strong> abc<br>
+        <strong>Password:</strong> 123
     </div>
+</div>
 
-    <script>
-        document.getElementById("login-form").addEventListener("submit", function(event) {
-            event.preventDefault();
+<script>
+    document.getElementById("login-form").addEventListener("submit", function (event) {
+        event.preventDefault();
 
-            const userId = document.getElementById("user_id").value;
-            const password = document.getElementById("password").value;
+        const userId = document.getElementById("user_id").value;
+        const password = document.getElementById("password").value;
 
-            fetch("/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ user_id: userId, password: password })
-            })
+        fetch("/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({user_id: userId, password: password})
+        })
             .then(response => response.json())
             .then(data => {
                 if (data['access token']) {
                     // Save token to localStorage for future requests
+                    localStorage.setItem("access_token", data['access token']);
+                    localStorage.setItem("user_id", data.user_id || userId);
                     console.log("Login successful: ", data);
-
                     // Redirect to the user's home page
                     const userIdFromResponse = data.user_id || userId;
                     window.location.href = `/user/${userIdFromResponse}`;
@@ -146,7 +159,7 @@
                 console.error("Error during login:", error);
                 document.getElementById("error-message").innerText = "An error occurred. Please try again.";
             });
-        });
-    </script>
+    });
+</script>
 </body>
 </html>
