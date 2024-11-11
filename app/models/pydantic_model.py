@@ -11,9 +11,6 @@ class TaskBase(BaseModel):
     user_id: str
     task_name: str
     deadline: datetime = datetime.now()
-    workload: int
-    workload_unit: str
-    start_time: datetime = datetime.now()
 
 class TaskCreate(TaskBase):
     pass

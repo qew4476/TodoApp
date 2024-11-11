@@ -43,7 +43,7 @@ def get_all_users():
 
 def create_task(task:pydantic_model.TaskCreate):
     try:
-        db_task_data = sql_model.Task(task_name=task.task_name, deadline=task.deadline,  user_id=task.user_id, workload=task.workload, workload_unit=task.workload_unit, start_time=task.start_time)
+        db_task_data = sql_model.Task(task_name=task.task_name, deadline=task.deadline,  user_id=task.user_id)
         db_session.add(db_task_data)
         db_session.commit()
         db_session.refresh(db_task_data)
