@@ -1,6 +1,5 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from app.routes import routes, routes_auth
-
 app = FastAPI()
 
 app.include_router(routes.task_router, prefix="/todolist", tags=["task_management"])

@@ -1,13 +1,13 @@
 from typing import List
-
-from fastapi import APIRouter
+from fastapi import APIRouter,Depends
 import app.db.crud as db
 from app.models import sql_model, pydantic_model
 from datetime import datetime
+from app.auth.jwt_bearer import JWTBearer
 
 task_router = APIRouter()
 
-@task_router.post('/task', response_model=pydantic_model.Task)
+@task_router.post('/task', response_model=pydantic_model.Task, dependencies=[Depends(JWTBearer())])
 def create_task(doc:pydantic_model.TaskCreate):
     return db.create_task(doc)
 
@@ -16,7 +16,7 @@ def get_task(task_id:int):
     return db.get_one_task(task_id)
 
 @task_router.get('/tasks/{user_id}', response_model=List[pydantic_model.Task])
-def get_a_user_all_tasks(user_id:str):
+def get_one_user_all_tasks(user_id:str):
     return db.get_a_user_all_tasks(user_id)
 
 #delete a task
