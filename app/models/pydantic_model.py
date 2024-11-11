@@ -8,15 +8,19 @@ from typing import List, Optional
 from datetime import datetime
 #restday = 1~7, 1 is Monday, 7 is Sunday
 class TaskBase(BaseModel):
+    user_id: str
     task_name: str
-    deadline: Optional[datetime]=None
+    deadline: datetime = datetime.now()
+    workload: int
+    workload_unit: str
+    start_time: datetime = datetime.now()
 
 class TaskCreate(TaskBase):
-    user_id: str
+    pass
 
 class Task(TaskBase):
     task_id:int
-    user_id:str
+
 
     class Config:
         from_attributes = True

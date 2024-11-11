@@ -20,6 +20,9 @@ class Task(BASE):
     task_id = Column(Integer, primary_key=True, autoincrement=True)
     task_name = Column(String(50), nullable=False)
     user_id = Column(String(50), ForeignKey('users.user_id'), nullable=False)
+    start_time = Column(TIMESTAMP)
     deadline = Column(TIMESTAMP)
+    workload = Column(Integer)
+    workload_unit = Column(String(50))
 
     users = relationship(argument="User", back_populates="tasks")
