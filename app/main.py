@@ -1,5 +1,7 @@
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.templating import Jinja2Templates
+from starlette.responses import HTMLResponse
+
 from app.routes import routes, routes_auth
 
 app = FastAPI()
@@ -13,6 +15,6 @@ async def login_page(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
 #homw page
-@app.get("/",description="Home Page(To do list)")
-async def home_page(request: Request):
-    return templates.TemplateResponse("home.html", {"request": request})
+@app.get("/user/{user_id}", description="Home Page",response_class=HTMLResponse)
+async def user_home(request: Request, user_id: str):
+    return templates.TemplateResponse("user_home.html", {"request": request, "user_id": user_id})

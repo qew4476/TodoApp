@@ -120,7 +120,26 @@
         window.onload = function() {
             const token = localStorage.getItem("token"); // Or use sessionStorage
             if (token) {
-                window.location.href = "/"; // Redirect to home if token exists
+                // Check if token is valid by sending a request to the backend
+                fetch("/user/me", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // If token is valid, redirect to the home page for the logged-in user
+                        window.location.href = "/user/me"; // Adjust this URL as needed
+                    } else {
+                        // If token is invalid, redirect to login
+                        window.location.href = "/auth/login";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error verifying token:", error);
+                    window.location.href = "/auth/login"; // If error occurs, redirect to login
+                });
             }
         };
 
@@ -140,10 +159,13 @@
             .then(response => response.json())
             .then(data => {
                 if (data['access token']) {
-                    // Save token to localStorage or sessionStorage for future requests
+                    // Save token to localStorage for future requests
                     localStorage.setItem("token", data['access token']);
                     console.log("Login successful: ", data);
-                    window.location.href = "/"; // Redirect to home after successful login
+
+                    // Redirect to the user's home page
+                    const userIdFromResponse = data.user_id || userId;
+                    window.location.href = `/user/${userIdFromResponse}`;
                 } else {
                     document.getElementById("error-message").innerText = "Invalid login credentials";
                 }
