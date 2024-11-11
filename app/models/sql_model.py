@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, ARRAY, TIMESTAMP
+from sqlalchemy import Column, Integer, String, ForeignKey,DATE
 from sqlalchemy.orm import relationship
 
 from sqlalchemy.orm import declarative_base
@@ -20,9 +20,6 @@ class Task(BASE):
     task_id = Column(Integer, primary_key=True, autoincrement=True)
     task_name = Column(String(50), nullable=False)
     user_id = Column(String(50), ForeignKey('users.user_id'), nullable=False)
-    start_time = Column(TIMESTAMP)
-    deadline = Column(TIMESTAMP)
-    workload = Column(Integer)
-    workload_unit = Column(String(50))
+    deadline = Column(DATE, nullable=False)
 
     users = relationship(argument="User", back_populates="tasks")

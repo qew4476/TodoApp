@@ -5,12 +5,12 @@
 from typing_extensions import Annotated
 from pydantic import BaseModel
 from typing import List, Optional
-from datetime import datetime
+from datetime import date
 #restday = 1~7, 1 is Monday, 7 is Sunday
 class TaskBase(BaseModel):
     user_id: str
     task_name: str
-    deadline: datetime = datetime.now()
+    deadline: date=date.today()
 
 class TaskCreate(TaskBase):
     pass
