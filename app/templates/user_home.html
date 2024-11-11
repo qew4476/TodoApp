@@ -51,6 +51,47 @@
         .todo-list h2 {
             color: #007bff;
         }
+
+        .task-input, .task-deadline {
+            margin-bottom: 10px;
+            padding: 8px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .task-button {
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .task-button:hover {
+            background-color: #0056b3;
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .task-item button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .task-item button:hover {
+            background-color: #c82333;
+        }
     </style>
 </head>
 <body>
@@ -62,37 +103,138 @@
 
 <div class="todo-list">
     <h2>Todos</h2>
-    <!-- List tasks  -->
-    <ul>
-        <li>Task 1: Do something important</li>
-        <li>Task 2: Another task</li>
+    <!-- Input for adding new task -->
+    <input type="text" class="task-input" id="task-input" placeholder="Enter new task...">
+    <input type="date" class="task-deadline" id="task-deadline" placeholder="Select deadline...">
+    <button class="task-button" onclick="addTask()">Add Task</button>
+
+    <ul id="task-list">
+        <!-- Task items will be dynamically inserted here -->
     </ul>
 </div>
 
 <script>
-    // 從 localStorage 獲取 token 和 user_id
-    const token = localStorage.getItem("access_token");
+    // 從 localStorage 獲取 user_id
     const localUserId = localStorage.getItem("user_id");
 
     // 獲取 URL 中的 user_id
     const urlParams = new URLSearchParams(window.location.search);
     const urlUserId = window.location.pathname.split("/")[2];
 
-    console.log("Token:", token);
-    console.log("Local User ID:", localUserId);
-    console.log("URL User ID:", urlUserId);
-
-    // 檢查 localStorage 的 user_id 是否與 URL 中的 user_id 一致
-    if (!token || !localUserId || localUserId !== urlUserId) {
-        // 如果沒有 token 或者 user_id 不一致，跳轉到登錄頁面
+    if (!localUserId || localUserId !== urlUserId) {
         window.location.href = "/login";
     }
 
-    // Logout function: Removes the token and redirects to the login page
-    function logout() {
-        localStorage.removeItem("token");  // Remove the token from localStorage
-        window.location.href = "/login";  // Redirect to the login page
+    // Fetch tasks for the user
+    function fetchTasks() {
+    fetch(`/todolist/tasks/${localUserId}`)
+    .then(response => response.json())
+    .then(data => {
+        // Log the data to confirm it's an array
+        console.log(data);
+        //print localUserId
+        // Ensure 'data' is an array before calling forEach
+        if (Array.isArray(data)) {
+            const taskList = document.getElementById('task-list');
+            taskList.innerHTML = '';  // Clear existing list
+
+            data.forEach(task => {
+                const li = document.createElement('li');
+                li.classList.add('task-item');
+                li.innerHTML = `
+                    <span>${task.task_name} - Deadline: ${task.deadline}</span>
+                    <div>
+                        <button onclick="deleteTask(${task.task_id})">Delete</button>
+                        <button onclick="editTask(${task.task_id}, '${task.task_name}', '${task.deadline}')">Edit</button>
+                    </div>
+                `;
+                taskList.appendChild(li);
+            });
+        } else {
+            console.error("Received data is not an array:", data);
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching tasks:', error);
+    });
+}
+
+    // Add a new task
+    function addTask() {
+        const taskInput = document.getElementById('task-input');
+        const taskDeadline = document.getElementById('task-deadline');
+        const taskName = taskInput.value.trim();
+        const deadline = taskDeadline.value.trim();
+
+        if (taskName && deadline) {
+            const task = { task_name: taskName, user_id: localUserId, deadline: deadline };
+            fetch('/todolist/task', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(task)
+            })
+            .then(response => response.json())
+            .then(() => {
+                taskInput.value = '';  // Clear the input field
+                taskDeadline.value = '';  // Clear the deadline input
+                fetchTasks();  // Refresh the task list
+            })
+            .catch(error => console.error('Error adding task:', error));
+        } else {
+            alert('Please enter a task name and a deadline');
+        }
     }
+
+    // Delete a task
+    function deleteTask(taskId) {
+        fetch(`/todolist/task/${taskId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(() => fetchTasks())  // Refresh task list after deletion
+        .catch(error => console.error('Error deleting task:', error));
+    }
+
+    function editTask(taskId, currentTaskName, currentDeadline) {
+    const newTaskName = prompt("Edit Task Name:", currentTaskName);
+    const newDeadline = prompt("Edit Deadline (YYYY-MM-DD):", currentDeadline);
+
+    // Ensure taskId is included in the updated task payload
+    if (newTaskName && newDeadline) {
+        const updatedTask = {
+            task_id: taskId,         // Ensure the task_id is passed for the PUT request
+            task_name: newTaskName,
+            user_id: localUserId,
+            deadline: newDeadline
+        };
+
+        fetch(`/todolist/task/${taskId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedTask)  // Sending the taskId in the payload
+        })
+        .then(response => response.json())
+        .then(() => fetchTasks())  // Refresh task list after editing
+        .catch(error => console.error('Error updating task:', error));
+    }
+}
+
+
+    // Logout function
+    function logout() {
+        localStorage.removeItem("user_id");
+        window.location.href = "/login";
+    }
+
+    // Initial task fetch when the page loads
+    window.onload = fetchTasks;
 </script>
 </body>
 </html>
