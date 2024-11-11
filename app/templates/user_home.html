@@ -114,10 +114,8 @@
 </div>
 
 <script>
-    // 從 localStorage 獲取 user_id
     const localUserId = localStorage.getItem("user_id");
 
-    // 獲取 URL 中的 user_id
     const urlParams = new URLSearchParams(window.location.search);
     const urlUserId = window.location.pathname.split("/")[2];
 

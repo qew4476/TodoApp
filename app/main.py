@@ -16,7 +16,6 @@ async def login_page(request: Request):
 
 @app.get("/user/{user_id}", description="User Home Page", response_class=HTMLResponse)
 async def user_home(user_id: str,request:Request):
-    # 這裡的 token 已經是經過驗證的 Bearer Token
     return templates.TemplateResponse("user_home.html", {"request": request, "user_id": user_id})
 
 #register the user
