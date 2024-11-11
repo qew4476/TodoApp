@@ -9,9 +9,6 @@ import datetime #to get the current time
 from app.db.connection import db_session
 
 
-def get_timestamp():
-    return datetime.datetime.now()
-
 
 def create_user(user:pydantic_model.UserCreate):    #It means the input data must match the format of UserCreate
     try:
@@ -43,7 +40,7 @@ def get_all_users():
 
 def create_task(task:pydantic_model.TaskCreate):
     try:
-        db_task_data = sql_model.Task(task_name=task.task_name, deadline=task.deadline,  user_id=task.user_id)
+        db_task_data = sql_model.Task(task_name=task.task_name, description=task.description,  user_id=task.user_id)
         db_session.add(db_task_data)
         db_session.commit()
         db_session.refresh(db_task_data)
@@ -61,9 +58,10 @@ def get_one_task(task_id:int):
         return None
     return pydantic_model.Task.model_validate(task_db)
 
-def get_a_user_all_tasks(user_id:str):
-    tasks_db = db_session.query(sql_model.Task).filter(sql_model.Task.user_id==user_id).all()
+def get_a_user_all_tasks(user_id: str):
+    tasks_db = db_session.query(sql_model.Task).filter(sql_model.Task.user_id == user_id).order_by(sql_model.Task.task_id.asc()).all()
     return [pydantic_model.Task.model_validate(task) for task in tasks_db]
+
 
 def delete_task(task_id:int):
     task_db = db_session.query(sql_model.Task).filter(sql_model.Task.task_id==task_id).first()

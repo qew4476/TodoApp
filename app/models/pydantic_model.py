@@ -10,7 +10,7 @@ from datetime import date
 class TaskBase(BaseModel):
     user_id: str
     task_name: str
-    deadline: date=date.today()
+    description: Optional[str]=None
 
 class TaskCreate(TaskBase):
     pass

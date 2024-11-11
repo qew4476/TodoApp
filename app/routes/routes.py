@@ -11,7 +11,7 @@ task_router = APIRouter()
 def create_task(doc:pydantic_model.TaskCreate):
     return db.create_task(doc)
 #dependencies=[Depends(JWTBearer())]
-@task_router.get('/task/{task_id}', response_model=pydantic_model.Task)
+@task_router.get('/task/{task_id}',dependencies=[Depends(JWTBearer())], response_model=pydantic_model.Task)
 def get_task(task_id:int):
     return db.get_one_task(task_id)
 

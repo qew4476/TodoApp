@@ -1,8 +1,7 @@
 from fastapi import FastAPI, Request, HTTPException, Depends
 from fastapi.templating import Jinja2Templates
-from starlette.responses import HTMLResponse
 
-from app.auth.jwt_bearer import JWTBearer
+
 from app.routes import routes, routes_auth
 
 app = FastAPI()

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey,DATE
+from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 
 from sqlalchemy.orm import declarative_base
@@ -20,6 +20,6 @@ class Task(BASE):
     task_id = Column(Integer, primary_key=True, autoincrement=True)
     task_name = Column(String(50), nullable=False)
     user_id = Column(String(50), ForeignKey('users.user_id'), nullable=False)
-    deadline = Column(DATE, nullable=False)
+    description = Column(String(90), nullable=True)
 
     users = relationship(argument="User", back_populates="tasks")
