@@ -2,10 +2,6 @@ from sqlalchemy.exc import IntegrityError
 
 import app.models.sql_model as sql_model
 import app.models.pydantic_model as pydantic_model
-
-
-import datetime #to get the current time
-
 from app.db.connection import db_session
 
 
