@@ -2,9 +2,136 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+        }
+
+        h1 {
+            color: blue;
+        }
+
+        .container {
+            width: 300px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #login-btn {
+            background-color: #008CBA;
+        }
+
+        #login-btn:hover {
+            background-color: #007bb5;
+        }
+
+        #message {
+            margin-top: 10px;
+            color: red;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1>TodoApp</h1>
+        <h2>Register</h2>
+        <form action="/auth/register" method="post" onsubmit="return submitForm(event)">
+            <label for="user_id">User ID:</label>
+            <input type="text" id="user_id" name="user_id" required>
 
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="user_name">User Name:</label>
+            <input type="text" id="user_name" name="user_name" required>
+
+            <button type="submit">Register</button>
+        </form>
+
+        <p id="message"></p>
+
+        <button id="login-btn" onclick="window.location.href='/login'">To Login Page</button>
+    </div>
+
+    <script>
+        async function submitForm(event) {
+            event.preventDefault();
+            const formData = {
+                user_id: document.getElementById('user_id').value,
+                password: document.getElementById('password').value,
+                user_name: document.getElementById('user_name').value
+            };
+
+            try {
+                const response = await fetch('/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('message').textContent = "Registration successful!";
+                    document.getElementById('message').style.color = "green";
+                } else {
+                    const errorData = await response.json();
+                    document.getElementById('message').textContent = errorData.detail || "Registration failed.";
+                }
+            } catch (error) {
+                document.getElementById('message').textContent = "An error occurred. Please try again.";
+            }
+        }
+    </script>
 </body>
 </html>
