@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  app:
+    image: python:3.11-slim
+    container_name: uvicorn_app
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "8001:8001"
+    environment:
+      - PYTHONPATH=/app
+      - DATABASE_URL=postgresql://postgres:password@db:5432/app_db
+    depends_on:
+      - db
+    command: >
+      sh -c "pip install --no-cache-dir -r requirements.txt && 
+             uvicorn app.main:app --host=0.0.0.0 --reload --port=8001"
+
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: zx985632
+      POSTGRES_DB: todo_db
+
+
+

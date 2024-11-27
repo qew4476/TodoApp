@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 db_user: str = 'postgres'
-db_port: int = 5432
+db_port: int = 5433
 db_host: str = 'localhost'
 db_password: str = 'zx985632'
 
