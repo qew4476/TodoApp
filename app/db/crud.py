@@ -3,13 +3,17 @@ from sqlalchemy.exc import IntegrityError
 import app.models.sql_model as sql_model
 import app.models.pydantic_model as pydantic_model
 from app.db.connection import db_session
+from passlib.context import CryptContext
 
-
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+def hash_password(password: str):
+    return pwd_context.hash(password)
 
 def create_user(user:pydantic_model.UserCreate):    #It means the input data must match the format of UserCreate
     try:
+        hashed_password = hash_password(user.password)
         #Format the input data (user) to meet the requirements for entering user data into the database.
-        db_user_data = sql_model.User(user_id=user.user_id,password=user.password,user_name=user.user_name)
+        db_user_data = sql_model.User(user_id=user.user_id,password=hashed_password,user_name=user.user_name)
         db_session.add(db_user_data)
         db_session.commit()
         db_session.refresh(db_user_data)
