@@ -11,7 +11,7 @@ services:
       - "8001:8001"
     environment:
       - PYTHONPATH=/app
-      - DATABASE_URL=postgresql://postgres:password@db:5432/app_db
+      - DATABASE_URL=postgresql://postgres:zx985632@db:5433/todo_db
     depends_on:
       - db
     command: >
@@ -22,11 +22,12 @@ services:
     image: postgres:15
     container_name: postgres_db
     ports:
-      - "5433:5432"
+      - "5433:5432" #5433是外部連的port 因此Dbeaver寫5433
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: zx985632
       POSTGRES_DB: todo_db
+
 
 
 

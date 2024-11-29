@@ -4,7 +4,10 @@ from fastapi.templating import Jinja2Templates
 from starlette.responses import HTMLResponse
 from app.routes import routes, routes_auth
 
+
 app = FastAPI()
+
+
 templates = Jinja2Templates(directory="./app/templates")
 
 app.include_router(routes.task_router, prefix="/todolist", tags=["task_management"])

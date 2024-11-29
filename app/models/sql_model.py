@@ -7,9 +7,9 @@ BASE = declarative_base()
 class User(BASE):
     __tablename__ = 'users'
 
-    user_id = Column(String(50), primary_key=True, index=True)
-    password = Column(String(50), nullable=False)
-    user_name = Column(String(50), nullable=False)
+    user_id = Column(String(64), primary_key=True, index=True)
+    password = Column(String(100), nullable=False)
+    user_name = Column(String(64), nullable=False)
 
     tasks = relationship("Task", back_populates="users", cascade="all, delete")
 
