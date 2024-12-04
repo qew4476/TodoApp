@@ -41,6 +41,12 @@ class User(UserBase):
 class UserLogin(UserBase):
     pass
 
+class envInfo(BaseModel):
+    db_user: str
+    db_port: int
+    db_host: str
+    db_password: str
+    db_name: str
 
 # task={"task_name":"test","deadline":"2021-10-10T10:00:00","rest_day":[1,4],"workload":1,"workload_unit":"h"}
 # TaskCreate(**task)

@@ -2,13 +2,13 @@
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from config import get_settings
 
-db_user: str = 'postgres'
-db_port: int = 5432 #這裡是讓docker內部連 保持5432
-db_host: str = 'db'
-db_password: str = 'zx985632'
+CONFIG=get_settings()
 
-DATABASE_URL: str = F'postgresql://{db_user}:{db_password}@{db_host}:{db_port}/todo_db'
+
+
+DATABASE_URL: str = F'postgresql://{CONFIG.DB_USER}:{CONFIG.DB_PASSWORD}@{CONFIG.DB_HOST}:{CONFIG.DB_PORT}/{CONFIG.DB_NAME}'
 
 engine = create_engine(DATABASE_URL)
 session = sessionmaker(autocommit=False, autoflush=False, bind=engine)

@@ -3,6 +3,7 @@ from fastapi import FastAPI, Request, HTTPException, Depends
 from fastapi.templating import Jinja2Templates
 from starlette.responses import HTMLResponse
 from app.routes import routes, routes_auth
+import config
 
 
 app = FastAPI()
