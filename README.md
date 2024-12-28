@@ -7,8 +7,7 @@ Login Page:
 ![image](https://github.com/user-attachments/assets/c5d57c7c-2318-47e0-b0c0-6a776836a41b)
 
 Todo List Page:
-![image](https://github.com/user-attachments/assets/01d9a03c-53ec-4a18-8e79-d8d523fd93f9)
-
+<img src="https://github.com/user-attachments/assets/01d9a03c-53ec-4a18-8e79-d8d523fd93f9" width="100"/>
 
 # Technology Stack
 * [FastAPI](https://fastapi.tiangolo.com/): Backend framework for building APIs.
