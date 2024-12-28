@@ -1,5 +1,4 @@
 # Overview
-[DEMO](http://52.196.36.3:8001/login)
 
 * This is a ToDo web application built using FastAPI and hosted on AWS. 
 * The browser might display a warning about the site being insecure due to the lack of an SSL certificate, but rest assured, it's safe to visit.
